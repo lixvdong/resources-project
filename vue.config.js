@@ -23,6 +23,13 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
+    },
+    // 代理配置如下
+    proxy: {
+      '/api': {
+        target: 'http://8.142.65.7:3600',
+        changeOrigin: true
+      }
     }
   },
   configureWebpack: {

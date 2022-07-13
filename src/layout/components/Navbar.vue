@@ -19,9 +19,9 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <!-- 用户头像 -->
-          <img src="" class="user-avatar">
+          <img :src="avatar" class="user-avatar">
           <!-- 用户名称 -->
-          <span class="name">柴柴老师</span>
+          <span class="name">{{ username }}</span>
           <i class="el-icon-caret-bottom" style="color:#fff" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -52,9 +52,7 @@ export default {
     FullScreen
   },
   computed: {
-    ...mapGetters([
-      'sidebar'
-    ])
+    ...mapGetters(['sidebar', 'username', 'avatar'])
   },
   methods: {
     toggleSideBar() {
@@ -62,7 +60,14 @@ export default {
     },
     // 退出登录
     logout() {
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$confirm('确认退出系统嘛？？?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('user/empty')
+        this.$router.push('login')
+      }).catch(() => {
+        this.$message.info('已取消')
+      })
     }
   }
 }

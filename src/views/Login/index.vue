@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
 export default {
   name: 'Login',
   data() {
@@ -122,8 +121,15 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(async valid => {
         if (!valid) return
-        const res = await login(this.loginForm)
-        console.log(res)
+        this.loading = true
+        try {
+          await this.$store.dispatch('user/getToken', this.loginForm)
+          this.$message.success('登陆成功')
+          this.$router.push('/')
+          this.loading = false
+        } catch (error) {
+          this.loading = false
+        }
       })
     }
   }
