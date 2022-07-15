@@ -6,6 +6,10 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+// 动态路由
+import asyncRouter from './asynvRouter'
+
+// 静态路由
 export const constantRoutes = [
   {
     path: '/login',
@@ -29,24 +33,15 @@ export const constantRoutes = [
       component: () => import('@/views/Dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
-  },
-  {
-    path: '/salarys',
-    component: Layout,
-    children: [{
-      path: '', // 如果children path置空的话 当前这个路由会作为一级渲染的默认路由
-      name: 'salarys',
-      component: () => import('@/views/Salary'),
-      meta: { title: '工资管理', icon: 'skill' }
-    }]
   }
+
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: [...constantRoutes, ...asyncRouter]
 })
 
 const router = createRouter()

@@ -18,11 +18,12 @@ function transTree(arr) {
   // 进行数据处理 todo
   // 1.形成map对象结构
   const map = {}
+
   arr.forEach(item => {
     map[item.id] = item
-    map[item.id].children = []
+    item.children = []
   })
-  // 通过pid进行匹配
+
   arr.forEach(item => {
     if (map[item.pid]) {
       map[item.pid].children.push(item)
