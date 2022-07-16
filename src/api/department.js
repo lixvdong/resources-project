@@ -8,7 +8,7 @@ export const getDepartmentListAPI = () => {
 
 // 获取部门负责人列表
 export const getDepartmentUserAPI = () => {
-  return request.get('//sys/user/simple')
+  return request.get('/sys/user/simple')
 }
 
 // 新增部门
