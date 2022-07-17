@@ -38,7 +38,7 @@
                       <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="openDial(data.id,'添加部门')">添加子部门</el-dropdown-item>
                         <el-dropdown-item @click.native="updataDial(data.id,'编辑部门')">编辑部门</el-dropdown-item>
-                        <el-dropdown-item>删除部门</el-dropdown-item>
+                        <el-dropdown-item @click.native="delDial(data.id)">删除部门</el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                   </el-col>
@@ -77,11 +77,17 @@
 
 <script>
 // 引入接口方法
-import { getDepartmentListAPI, getDepartmentUserAPI, addDepartmentAPI, getDepartmentAPI, updataDepartmentAPI } from '@/api/department'
+import { getDepartmentListAPI, getDepartmentUserAPI, addDepartmentAPI, getDepartmentAPI, updataDepartmentAPI, delDepartmentAPI } from '@/api/department'
 // 引入树形数据处理函数
 import transTree from '@/utils/transTree'
 export default {
   data() {
+    const validateCode = (rule, value, callback) => {
+      if (this.codeArr.includes(value)) {
+        callback(new Error('部门编码不能重复'))
+      }
+      callback()
+    }
     return {
       // 弹出框的提示
       title: '',
@@ -107,7 +113,8 @@ export default {
         ],
         code: [
           { required: true, message: '部门编码不能为空', trigger: ['blur', 'change'] },
-          { min: 1, max: 50, message: '部门编码要求1-50个字符', trigger: ['blur', 'change'] }
+          { min: 1, max: 50, message: '部门编码要求1-50个字符', trigger: ['blur', 'change'] },
+          { validator: validateCode, trigger: 'blur' }
         ],
         manager: [
           { required: true, message: '部门负责人不能为空', trigger: ['blur', 'change'] }
@@ -120,7 +127,9 @@ export default {
       // 控制弹出框的显示与隐藏
       dialogVisible: false,
       // 负责人列表
-      managerList: []
+      managerList: [],
+      // 部门编码数组
+      codeArr: []
     }
   },
   created() {
@@ -131,12 +140,15 @@ export default {
     async getList() {
       const res = await getDepartmentListAPI()
       this.list = transTree(res.depts)
+      this.arr = res.depts
+      this.codeArr = this.arr.map(item => item.code)
     },
     // 弹出框隐藏
     closeDial() {
       this.dialogVisible = false
       this.$refs.from.resetFields()
       this.resetFrom()
+      this.getList()
     },
     // 显示弹出框
     async openDial(id, title) {
@@ -167,6 +179,7 @@ export default {
       this.dialogVisible = true
       const res = await getDepartmentAPI(id)
       this.from = res
+      this.codeArr = this.codeArr.filter(item => item !== this.from.code)
     },
     //  清空表单
     resetFrom() {
@@ -177,6 +190,17 @@ export default {
         name: '',
         pid: ''
       }
+    },
+    // 删除部门
+    delDial(id) {
+      this.$confirm('此操作将永久删除该部门, 是否继续?', '提示', {
+        type: 'warning'
+      }).then(async() => {
+        await delDepartmentAPI(id)
+        this.$message.success('删除成功')
+        this.getList()
+      }).catch(() => {
+      })
     }
   }
 }
