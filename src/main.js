@@ -13,6 +13,9 @@ import router from './router'
 
 import '@/icons' // icon
 
+import glogin from '@/components'
+Vue.use(glogin)
+
 import '@/permission'
 
 Vue.use(ElementUI)
