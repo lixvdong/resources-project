@@ -13,7 +13,7 @@
         </el-row>
         <!-- 表格 -->
         <el-table :data="list">
-          <el-table-column type="index" label="序号" width="120" />
+          <el-table-column type="index" :index="indexMethod" label="序号" width="120" />
           <el-table-column prop="name" label="角色名称" width="240" />
           <el-table-column prop="description" label="描述" />
           <el-table-column label="操作" width="240" fixed="right">
@@ -142,6 +142,10 @@ export default {
       this.roleDialogVisible = true
       const res = await getRoleAPI(id)
       this.roleForm = res
+    },
+    // 自定义需要
+    indexMethod(index) {
+      return index + 1 + (this.queryData.page - 1) * this.queryData.pagesize
     }
   }
 }
