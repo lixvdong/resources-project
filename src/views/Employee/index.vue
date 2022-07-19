@@ -10,8 +10,9 @@
           </div>
         </template>
         <template #right>
-          <el-button type="primary" size="small">历史归档</el-button>
-          <el-button type="primary" size="small">导出</el-button>
+          <el-button type="warning" size="small">excel导入</el-button>
+          <el-button type="danger" size="small">excel导出</el-button>
+          <el-button type="primary" size="small" @click="visibleDialog = true">新增员工</el-button>
         </template>
       </PageTools>
       <!-- 表格 -->
@@ -45,18 +46,21 @@
         </div>
       </el-card>
     </div>
+    <add-employee :visible="visibleDialog" @close-dialog="closeDialog" />
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
 import { getEmplListAPI, delEmplAPI } from '@/api/employee'
+import addEmployee from './ImportExecl/add-employee.vue'
 export default {
   filters: {
     timer(val) {
       return dayjs(val).format('YYYY-MM-DD')
     }
   },
+  components: { addEmployee },
   data() {
     return {
       // 员工列表
@@ -67,7 +71,9 @@ export default {
         size: 5
       },
       // 员工总数
-      total: 0
+      total: 0,
+      // 控制弹窗显示隐藏
+      visibleDialog: false
     }
   },
   created() {
@@ -98,6 +104,11 @@ export default {
         this.$message.success('删除成功!')
         this.getList()
       }).catch(() => { })
+    },
+    // 关闭弹窗
+    closeDialog() {
+      this.visibleDialog = false
+      this.getList()
     }
   }
 }
