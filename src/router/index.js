@@ -33,6 +33,18 @@ export const constantRoutes = [
       component: () => import('@/views/Dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
+  },
+
+  {
+    path: '/import',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: '',
+      name: 'import',
+      component: () => import('@/views/ImportExelc/index.vue'),
+      meta: { title: '导入表格' }
+    }]
   }
 
 ]
