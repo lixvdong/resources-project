@@ -20,6 +20,18 @@
         <el-table border :data="list">
           <el-table-column label="序号" type="index" :index="indexMethod" />
           <el-table-column label="姓名" prop="username" />
+          <el-table-column label="头像" width="110">
+            <template #default="scope">
+              <!-- <img :src="scope.row.staffPhoto" alt="" width="80"> -->
+              <el-image :src="scope.row.staffPhoto" class="avatar">
+                <!-- 具名插槽新语法  图片加载出错的时候自动显示 -->
+                <template #error>
+                  <!-- <i class="el-icon-picture-outline" /> -->
+                  <img src="@/assets/common/bigUserHeader.png" width="80">
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
           <el-table-column label="工号" prop="workNumber" />
           <el-table-column label="聘用形式">
             <template #default="{row}">
@@ -147,5 +159,13 @@ export default {
 }
 </script>
 
-<style lang='' scoped>
+<style lang='scss' scoped>
+.avatar{
+  width: 80px;
+  height: 80px;
+  background-color: #f3f3f3;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 </style>
