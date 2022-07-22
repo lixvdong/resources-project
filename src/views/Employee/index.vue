@@ -34,7 +34,7 @@
           </el-table-column>
           <el-table-column label="操作" fixed="right" width="200">
             <template #default="{row}">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button type="text" size="small" @click="showEmployee(row.id)">查看</el-button>
               <el-button type="text" size="small">分配角色</el-button>
               <el-button type="text" size="small" @click="delEmployee(row.id)">删除</el-button>
             </template>
@@ -132,6 +132,15 @@ export default {
           bookType: 'xlsx'
         })
         this.$message.success('导出成功')
+      })
+    },
+    // 查看员工详情
+    showEmployee(id) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id
+        }
       })
     }
   }

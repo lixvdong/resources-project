@@ -45,6 +45,18 @@ export const constantRoutes = [
       component: () => import('@/views/ImportExelc/index.vue'),
       meta: { title: '导入表格' }
     }]
+  },
+
+  {
+    path: '/detail',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: '',
+      name: 'datail',
+      component: () => import('@/views/Employee/detalil.vue'),
+      meta: { title: '员工详情' }
+    }]
   }
 
 ]

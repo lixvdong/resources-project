@@ -26,12 +26,12 @@ export const getEmplJobsAPI = id => {
   return request.get(`/employees/${id}/jobs`)
 }
 
-// 修改员工基本信息/sys/user/{id}
-export const updataEmplUserAPI = id => {
-  return request.put(`sys/user/${id}`)
+// 修改员工基本信息
+export const updataEmplUserAPI = data => {
+  return request.put(`sys/user/${data.id}`, data)
 }
 
-// 批量导入员工/
+// 批量导入员工
 export const batchAddEmplAPI = data => {
   return request.post('sys/user/batch', data)
 }
