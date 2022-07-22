@@ -20,7 +20,9 @@
             />
           </el-form-item>
 
-          <el-form-item label="员工头像" />
+          <el-form-item label="员工头像">
+            <UploadImg :imges-url="userInfo.staffPhoto" @imgUrl="imgUrl" />
+          </el-form-item>
 
           <!-- 保存个人信息 -->
           <el-row class="inline-info" type="flex" justify="center">
@@ -66,6 +68,10 @@ export default {
         this.$message.success('修改成功')
         this.getDetail()
       })
+    },
+    // 获取员工头像
+    imgUrl(val) {
+      this.userInfo.staffPhoto = val
     }
   }
 }
