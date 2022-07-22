@@ -11,7 +11,7 @@
         </template>
         <template #right>
           <el-button type="warning" size="small" @click="$router.push('/import')">excel导入</el-button>
-          <el-button type="danger" size="small">excel导出</el-button>
+          <el-button type="danger" size="small" @click="exportExecl">excel导出</el-button>
           <el-button type="primary" size="small" @click="visibleDialog = true">新增员工</el-button>
         </template>
       </PageTools>
@@ -54,6 +54,7 @@
 import dayjs from 'dayjs'
 import { getEmplListAPI, delEmplAPI } from '@/api/employee'
 import addEmployee from './ImportExecl/add-employee.vue'
+import { getExportData } from '@/utils/execl'
 export default {
   filters: {
     timer(val) {
@@ -109,6 +110,29 @@ export default {
     closeDialog() {
       this.visibleDialog = false
       this.getList()
+    },
+    // 导出表格
+    exportExecl() {
+      import('@/vendor/Export2Excel').then(async(excel) => {
+        const res = await getEmplListAPI(this.params)
+        const headerRelation = {
+          '姓名': 'username',
+          '手机号': 'mobile',
+          '入职日期': 'timeOfEntry',
+          '工号': 'workNumber',
+          '聘用形式': 'formOfEmployment',
+          '部门': 'departmentName'
+        }
+        const { data } = getExportData(res.rows, headerRelation)
+        excel.export_json_to_excel({
+          header: Object.keys(headerRelation),
+          data,
+          filename: 'execl-list',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+        this.$message.success('导出成功')
+      })
     }
   }
 }
