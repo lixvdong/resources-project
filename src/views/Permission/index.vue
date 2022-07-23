@@ -13,7 +13,7 @@
           <el-table-column label="操作">
             <template #default="{row}">
               <el-button type="text" @click="addPermission({type:2,pid:row.id})">添加</el-button>
-              <el-button type="text">编辑</el-button>
+              <el-button type="text" @click="updataPermission(row.id)">编辑</el-button>
               <el-button type="text" @click="delPermisission(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -21,7 +21,7 @@
       </el-card>
     </div>
     <!-- 添加和编辑弹窗 -->
-    <el-dialog :visible="showDialog" title="弹层标题" @close="closeDialog">
+    <el-dialog :visible="showDialog" :title="formData.id?'编辑权限点':'添加权限点'" @close="closeDialog">
       <el-form ref="from" label-width="100px" :model="formData">
         <el-form-item label="权限名称">
           <el-input v-model="formData.name" />
@@ -33,13 +33,7 @@
           <el-input v-model="formData.description" />
         </el-form-item>
         <el-form-item label="权限启用">
-          <el-switch
-            v-model="formData.enVisible"
-            active-text="启用"
-            active-value="1"
-            inactive-text="不启用"
-            inactive-value="0"
-          />
+          <el-switch v-model="formData.enVisible" active-text="启用" active-value="1" inactive-text="不启用" inactive-value="0" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -53,7 +47,7 @@
 </template>
 
 <script>
-import { getPermissionListAPI, addPermissionAPI, delPermissionAPI } from '@/api/permission'
+import { getPermissionListAPI, addPermissionAPI, delPermissionAPI, getPermissionAPI, updataPermissionAPI } from '@/api/permission'
 import transTree from '@/utils/transTree'
 export default {
   data() {
@@ -62,6 +56,7 @@ export default {
       list: [],
       // 控制弹窗显示隐藏
       showDialog: false,
+      // 绑定数据
       formData: {
         enVisible: '0', // 开启
         name: '', // 名称
@@ -104,12 +99,17 @@ export default {
     publish() {
       this.$refs.from.validate(async(valid) => {
         if (!valid) return
-        await addPermissionAPI(this.formData)
-        this.$message.success('添加成功')
+        if (this.formData.id) {
+          await updataPermissionAPI(this.formData)
+        } else {
+          await addPermissionAPI(this.formData)
+        }
+        this.$message.success(`${this.formData.id ? '编辑' : '添加'}成功`)
         this.closeDialog()
         this.getList()
       })
     },
+    // 删除权限点
     delPermisission(id) {
       this.$confirm('此操作将永久删除该权限点, 是否继续?', '提示', {
         type: 'warning'
@@ -117,7 +117,12 @@ export default {
         await delPermissionAPI(id)
         this.$message.success('删除成功')
         this.getList()
-      }).catch(() => {})
+      }).catch(() => { })
+    },
+    async updataPermission(id) {
+      const res = await getPermissionAPI(id)
+      this.formData = res
+      this.showDialog = true
     }
   }
 }
