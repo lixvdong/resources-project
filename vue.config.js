@@ -27,7 +27,7 @@ module.exports = {
     // 代理配置如下
     proxy: {
       '/api': {
-        target: 'http://ihrm-java.itheima.net/',
+        target: 'http://ihrm.itheima.net/',
         changeOrigin: true
       }
     }
