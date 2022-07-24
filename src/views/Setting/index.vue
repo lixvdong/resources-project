@@ -18,7 +18,7 @@
           <el-table-column prop="description" label="描述" />
           <el-table-column label="操作" width="240" fixed="right">
             <template #default="{row}">
-              <el-button size="small">分配权限</el-button>
+              <el-button size="small" @click.native="assignPermission(row.id)">分配权限</el-button>
               <el-button size="small" @click.native="updataRole(row.id)">编辑</el-button>
               <el-button size="small" type="danger" @click.native="delRole(row.id)">删除</el-button>
             </template>
@@ -54,11 +54,39 @@
         <el-button size="small" type="primary" @click.native="publish">确定</el-button>
       </el-row>
     </el-dialog>
+    <!-- 分配权限弹窗 -->
+    <!-- 分配权限的弹层 -->
+    <el-dialog
+      title="分配权限(一级为路由页面查看权限-二级为按钮操作权限)"
+      :visible="showAssignDialog"
+      @close="closeAssignDialog"
+      @open="openAssingDialog"
+    >
+      <!-- 权限点数据展示 -->
+      <el-tree
+        ref="tree"
+        :data="permissionList"
+        :props="{ label: 'name' }"
+        :default-expand-all="true"
+        :show-checkbox="true"
+        :check-strictly="true"
+        node-key="id"
+      />
+      <template #footer>
+        <div style="text-align: right;">
+          <el-button @click="closeAssignDialog">取消</el-button>
+          <el-button type="primary" @click="addPermission">确定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRoleListAPI, delRoleAPI, addRoleAPI, getRoleAPI, updataRoleAPI } from '@/api/role'
+import { getPermissionListAPI } from '@/api/permission'
+import transTree from '@/utils/transTree'
+import { distRoleAPI } from '@/api/role'
 export default {
   data() {
     return {
@@ -82,6 +110,15 @@ export default {
       rules: {
         name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
         description: [{ required: true, message: '角色描述不能为空', trigger: 'blur' }]
+      },
+      // 控制分配权限弹窗隐藏或显示
+      showAssignDialog: false,
+      // 权限点列表
+      permissionList: [],
+      // 添加权限数据
+      permiss: {
+        id: '',
+        permIds: []
       }
     }
   },
@@ -143,9 +180,36 @@ export default {
       const res = await getRoleAPI(id)
       this.roleForm = res
     },
-    // 自定义需要
+    // 自定义序号
     indexMethod(index) {
       return index + 1 + (this.queryData.page - 1) * this.queryData.pagesize
+    },
+    // 打开分配权限弹窗
+    async assignPermission(id) {
+      this.showAssignDialog = true
+      this.permiss.id = id
+      const res = await getRoleAPI(id)
+      this.$refs.tree.setCheckedKeys(res.permIds)
+    },
+    // 关闭分配权限点弹窗
+    closeAssignDialog() {
+      this.showAssignDialog = false
+      this.permiss = {
+        id: '',
+        permIds: []
+      }
+    },
+    // 展示权限列表
+    async openAssingDialog() {
+      const res = await getPermissionListAPI()
+      this.permissionList = transTree(res)
+    },
+    // 添加权限
+    async addPermission() {
+      this.permiss.permIds = this.$refs.tree.getCheckedKeys()
+      await distRoleAPI(this.permiss)
+      this.$message.success('权限分配成功')
+      this.closeAssignDialog()
     }
   }
 }

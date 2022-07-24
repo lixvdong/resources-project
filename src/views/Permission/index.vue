@@ -59,7 +59,7 @@ export default {
         if (this.formData.type === 1) {
           const type1 = this.nameList.filter(item => item.type === 1)
           const type1_ = type1.map(item => item.name)
-          console.log(type1_)
+          // console.log(type1_)
           if (type1_.includes(value)) {
             callback(new Error('权限点名称不能重复～～～'))
           } else {
@@ -69,7 +69,7 @@ export default {
           const type2 = this.nameList.filter(item => item.type === 2)
           const type2_ = type2.filter(item => item.id !== this.formData.id)
           const arr = type2_.map(item => item.name)
-          console.log(arr)
+          // console.log(arr)
           if (arr.includes(value)) {
             callback(new Error('权限点名称不能重复～～～'))
           } else {
@@ -86,7 +86,7 @@ export default {
         if (this.formData.type === 1) {
           const type1 = this.nameList.filter(item => item.type === 1)
           const type1_ = type1.map(item => item.code)
-          console.log(type1_)
+          // console.log(type1_)
           if (type1_.includes(value)) {
             callback(new Error('权限点标识不能重复～～～'))
           } else {
@@ -96,7 +96,7 @@ export default {
           const type2 = this.nameList.filter(item => item.type === 2)
           const type2_ = type2.filter(item => item.id !== this.formData.id)
           const arr = type2_.map(item => item.code)
-          console.log(arr)
+          // console.log(arr)
           if (arr.includes(value)) {
             callback(new Error('权限点标识不能重复～～～'))
           } else {
