@@ -7,7 +7,7 @@ const asyncRouter = [
     component: Layout,
     children: [{
       path: '',
-      name: 'department',
+      name: 'departments',
       component: () => import('@/views/Department/index'),
       meta: { title: '组织架构', icon: 'tree' }
     }]
@@ -18,7 +18,7 @@ const asyncRouter = [
     component: Layout,
     children: [{
       path: '',
-      name: 'permission',
+      name: 'permissions',
       component: () => import('@/views/Permission/index'),
       meta: { title: '权限点管理', icon: 'lock' }
     }]
@@ -29,7 +29,7 @@ const asyncRouter = [
     component: Layout,
     children: [{
       path: '',
-      name: 'employee',
+      name: 'employees',
       component: () => import('@/views/Employee/index'),
       meta: { title: '员工管理', icon: 'people' }
     }]
@@ -40,7 +40,7 @@ const asyncRouter = [
     component: Layout,
     children: [{
       path: '',
-      name: 'setting',
+      name: 'settings',
       component: () => import('@/views/Setting/index'),
       meta: { title: '角色管理', icon: 'setting' }
     }]
@@ -51,7 +51,7 @@ const asyncRouter = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Salary',
+      name: 'salarys',
       component: () => import('@/views/Salary/index'),
       meta: { title: '工资管理', icon: 'money' }
     }]

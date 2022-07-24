@@ -2,6 +2,7 @@
 // 引入router
 import router from '@/router'
 import { getToken } from './utils/auth'
+import asyncRouter from '@/router/asynvRouter'
 
 // 引入进度条
 import nProgress from 'nprogress'
@@ -9,7 +10,7 @@ import 'nprogress/nprogress.css'
 import store from './store'
 
 const WHITE_LIST = ['/login', '/404']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   const token = getToken()
   nProgress.start()
   if (token) {
@@ -18,7 +19,12 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
       if (!store.state.user.userInfo.userId) {
-        store.dispatch('user/getUserInfo')
+        const res = await store.dispatch('user/getUserInfo')
+        const menus = res.roles.menus
+        const filterRoutes = asyncRouter.filter(item => menus.includes(item.children[0].name))
+        router.addRoutes(filterRoutes)
+        store.commit('menu/setMenuList', filterRoutes)
+        console.log(menus, filterRoutes)
       }
     }
   } else {

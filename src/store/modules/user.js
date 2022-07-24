@@ -29,6 +29,7 @@ export default {
       const res = await getUserInfoAPI()
       const res_ = await getUserAvatarAPI(res.userId)
       store.commit('setUserInfo', { ...res, ...res_ })
+      return res
     }
   }
 }
