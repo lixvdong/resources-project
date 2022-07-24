@@ -22,11 +22,11 @@
     </div>
     <!-- 添加和编辑弹窗 -->
     <el-dialog :visible="showDialog" :title="formData.id?'编辑权限点':'添加权限点'" @close="closeDialog">
-      <el-form ref="from" label-width="100px" :model="formData">
-        <el-form-item label="权限名称">
+      <el-form ref="from" label-width="100px" :model="formData" :rules="rules">
+        <el-form-item label="权限名称" prop="name">
           <el-input v-model="formData.name" />
         </el-form-item>
-        <el-form-item label="权限标识">
+        <el-form-item label="权限标识" prop="code">
           <el-input v-model="formData.code" />
         </el-form-item>
         <el-form-item label="权限描述">
@@ -51,6 +51,60 @@ import { getPermissionListAPI, addPermissionAPI, delPermissionAPI, getPermission
 import transTree from '@/utils/transTree'
 export default {
   data() {
+    // 验证权限点名称
+    const validateName = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('权限点名称不能为空～～～'))
+      } else {
+        if (this.formData.type === 1) {
+          const type1 = this.nameList.filter(item => item.type === 1)
+          const type1_ = type1.map(item => item.name)
+          console.log(type1_)
+          if (type1_.includes(value)) {
+            callback(new Error('权限点名称不能重复～～～'))
+          } else {
+            callback()
+          }
+        } else {
+          const type2 = this.nameList.filter(item => item.type === 2)
+          const type2_ = type2.filter(item => item.id !== this.formData.id)
+          const arr = type2_.map(item => item.name)
+          console.log(arr)
+          if (arr.includes(value)) {
+            callback(new Error('权限点名称不能重复～～～'))
+          } else {
+            callback()
+          }
+        }
+      }
+    }
+    // 验证权限点标识
+    const validateCode = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('权限标识称不能为空～～～'))
+      } else {
+        if (this.formData.type === 1) {
+          const type1 = this.nameList.filter(item => item.type === 1)
+          const type1_ = type1.map(item => item.code)
+          console.log(type1_)
+          if (type1_.includes(value)) {
+            callback(new Error('权限点标识不能重复～～～'))
+          } else {
+            callback()
+          }
+        } else {
+          const type2 = this.nameList.filter(item => item.type === 2)
+          const type2_ = type2.filter(item => item.id !== this.formData.id)
+          const arr = type2_.map(item => item.code)
+          console.log(arr)
+          if (arr.includes(value)) {
+            callback(new Error('权限点标识不能重复～～～'))
+          } else {
+            callback()
+          }
+        }
+      }
+    }
     return {
       // 列表信息
       list: [],
@@ -64,7 +118,12 @@ export default {
         description: '', // 描述
         type: '', // 类型
         pid: '' // 添加到哪个节点下
-      }
+      },
+      rules: {
+        name: [{ validator: validateName, trigger: 'blur' }],
+        code: [{ validator: validateCode, trigger: 'blur' }]
+      },
+      nameList: []
     }
   },
   created() {
@@ -75,6 +134,7 @@ export default {
     async getList() {
       const res = await getPermissionListAPI()
       this.list = transTree(res)
+      this.nameList = res
     },
     // 关闭弹窗
     closeDialog() {
@@ -119,6 +179,7 @@ export default {
         this.getList()
       }).catch(() => { })
     },
+    // 打开编辑弹窗
     async updataPermission(id) {
       const res = await getPermissionAPI(id)
       this.formData = res
