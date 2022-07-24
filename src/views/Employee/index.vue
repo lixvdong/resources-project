@@ -47,7 +47,7 @@
           <el-table-column label="操作" fixed="right" width="200">
             <template #default="{row}">
               <el-button type="text" size="small" @click="showEmployee(row.id)">查看</el-button>
-              <el-button type="text" size="small">分配角色</el-button>
+              <el-button type="text" size="small" @click="assignRole(row.id)">分配角色</el-button>
               <el-button type="text" size="small" @click="delEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -59,14 +59,33 @@
       </el-card>
     </div>
     <add-employee :visible="visibleDialog" @close-dialog="closeDialog" />
+
+    <!-- 员工分配角色弹窗 -->
+    <el-dialog
+      class="assign-role"
+      title="分配角色"
+      :visible="showRoleDialog"
+      @close="closeRole"
+      @open="openRole"
+    >
+      <el-checkbox-group v-model="roleIds">
+        <el-checkbox v-for="item in roleList" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox>
+      </el-checkbox-group>
+      <!-- 这里准备复选框 -->
+      <template #footer>
+        <el-button type="primary" size="small" @click="addRole">确定</el-button>
+        <el-button size="small" @click="closeRole">取消</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
-import { getEmplListAPI, delEmplAPI } from '@/api/employee'
+import { getEmplListAPI, delEmplAPI, assignRolesEmplAPI, getEmplUserAPI } from '@/api/employee'
 import addEmployee from './ImportExecl/add-employee.vue'
 import { getExportData } from '@/utils/execl'
+import { getRoleListAPI } from '@/api/role'
 export default {
   filters: {
     timer(val) {
@@ -86,7 +105,15 @@ export default {
       // 员工总数
       total: 0,
       // 控制弹窗显示隐藏
-      visibleDialog: false
+      visibleDialog: false,
+      // 控制员工分配角色弹窗
+      showRoleDialog: false,
+      // 已选的角色列表
+      roleIds: [],
+      // 角色id
+      roleId: null,
+      // 角色列表
+      roleList: []
     }
   },
   created() {
@@ -154,6 +181,33 @@ export default {
           id
         }
       })
+    },
+    // 打开分配角色弹窗
+    async assignRole(id) {
+      this.showRoleDialog = true
+      this.roleId = id
+      const res = await getEmplUserAPI(id)
+      this.roleIds = res.roleIds
+    },
+    // 关闭分配角色弹窗
+    closeRole() {
+      this.showRoleDialog = false
+      this.roleIds = []
+      this.roleId = null
+    },
+    // 获取角色列表
+    async openRole() {
+      const res = await getRoleListAPI({ page: 1, pagesize: 100 })
+      this.roleList = res.rows
+    },
+    // 添加角色
+    async addRole() {
+      await assignRolesEmplAPI({
+        id: this.roleId,
+        roleIds: this.roleIds
+      })
+      this.$message.success('添加角色成功')
+      this.closeRole()
     }
   }
 }
