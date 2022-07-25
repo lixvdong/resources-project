@@ -102,6 +102,7 @@
             <span>绩效指数</span>
           </div>
           <!-- 放置雷达图 -->
+          <render title="公司绩效" />
         </el-card>
         <!-- 帮助连接 -->
         <el-card class="box-card">
@@ -138,9 +139,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import Render from './component/Render.vue'
 export default {
   name: 'Dashboard',
+  components: {
+    Render
+  },
   data() {
     return {
       alendarDate: new Date()
