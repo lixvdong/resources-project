@@ -64,7 +64,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.commit('user/empty')
-        this.$router.push('login')
+        this.$router.push('/login')
       }).catch(() => {
         this.$message.info('已取消')
       })

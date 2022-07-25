@@ -24,7 +24,7 @@ router.beforeEach(async(to, from, next) => {
         const filterRoutes = asyncRouter.filter(item => menus.includes(item.children[0].name))
         router.addRoutes(filterRoutes)
         store.commit('menu/setMenuList', filterRoutes)
-        console.log(menus, filterRoutes)
+        // console.log(menus, filterRoutes)
       }
     }
   } else {

@@ -1,4 +1,5 @@
 import { loginAPI, getUserInfoAPI, getUserAvatarAPI } from '@/api/user'
+import { resetRouter } from '@/router'
 import { getToken, removeToken, setToken } from '@/utils/auth'
 export default {
   namespaced: true,
@@ -18,6 +19,7 @@ export default {
       state.token = ''
       state.userInfo = {}
       removeToken()
+      resetRouter()
     }
   },
   actions: {
