@@ -1,19 +1,166 @@
 <template>
   <div class="dashboard-container">
-    this is Dashboard
+    <!-- 头部内容 -->
+    <el-card class="header-card">
+      <div>
+        <div class="fl headL">
+          <div class="headImg">
+            <img v-if="avatar" :src="avatar">
+            <img v-else src="@/assets/common/head.jpg">
+          </div>
+          <div class="headInfoTip">
+            <p class="firstChild">早安，{{ username }}，祝你开心每一天！</p>
+            <p class="lastChild">早安，{{ username }}，祝你开心每一天！</p>
+          </div>
+        </div>
+        <div class="fr" />
+      </div>
+    </el-card>
+    <!-- 主要内容 -->
+    <el-row type="flex" justify="space-between">
+      <!-- 左侧内容 -->
+      <el-col :span="15" style="padding-right: 26px">
+        <!-- 工作日历 -->
+        <el-card class="box-card">
+          <div slot="header" class="header">
+            <span>工作日历</span>
+          </div>
+          <!-- 放置日历组件 -->
+          <el-calendar v-model="alendarDate">
+            <template #dateCell="{ date }">
+              <div class="date-content">
+                <span class="text">{{ formartDay(date) }}</span>
+                <span v-show="checkShow(date)" class="rest">休</span>
+              </div>
+            </template>
+          </el-calendar>
+        </el-card>
+        <!-- 公告 -->
+        <el-card class="box-card">
+          <div class="advContent">
+            <div class="title">公告</div>
+            <div class="contentItem">
+              <ul class="noticeList">
+                <li>
+                  <div class="item">
+                    <img src="@/assets/common/img.jpeg" alt="">
+                    <div>
+                      <p>
+                        <span class="col">朱继柳</span> 发布了
+                        第1期“传智大讲堂”互动讨论获奖名单公布
+                      </p>
+                      <p>2018-07-21 15:21:38</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="item">
+                    <img src="@/assets/common/img.jpeg" alt="">
+                    <div>
+                      <p>
+                        <span class="col">朱继柳</span> 发布了
+                        第2期“传智大讲堂”互动讨论获奖名单公布
+                      </p>
+                      <p>2018-07-21 15:21:38</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="item">
+                    <img src="@/assets/common/img.jpeg" alt="">
+                    <div>
+                      <p>
+                        <span class="col">朱继柳</span> 发布了
+                        第3期“传智大讲堂”互动讨论获奖名单公布
+                      </p>
+                      <p>2018-07-21 15:21:38</p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <!-- 右侧内容 -->
+      <el-col :span="9">
+        <el-card class="box-card">
+          <div class="header headTit">
+            <span>流程申请</span>
+          </div>
+          <div class="sideNav">
+            <el-button class="sideBtn">加班离职</el-button>
+            <el-button class="sideBtn">请假调休</el-button>
+            <el-button class="sideBtn">审批列表</el-button>
+            <el-button class="sideBtn">我的信息</el-button>
+          </div>
+        </el-card>
+
+        <!-- 绩效指数 -->
+        <el-card class="box-card">
+          <div slot="header" class="header">
+            <span>绩效指数</span>
+          </div>
+          <!-- 放置雷达图 -->
+        </el-card>
+        <!-- 帮助连接 -->
+        <el-card class="box-card">
+          <div class="header headTit">
+            <span>帮助链接</span>
+          </div>
+          <div class="sideLink">
+            <el-row>
+              <el-col :span="8">
+                <a href="#">
+                  <span class="icon iconGuide" />
+                  <p>入门指南</p>
+                </a>
+              </el-col>
+              <el-col :span="8">
+                <a href="#">
+                  <span class="icon iconHelp" />
+                  <p>在线帮助手册</p>
+                </a>
+              </el-col>
+              <el-col :span="8">
+                <a href="#">
+                  <span class="icon iconTechnology" />
+                  <p>联系技术支持</p>
+                </a>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'Dashboard',
+  data() {
+    return {
+      alendarDate: new Date()
+    }
+  },
   computed: {
     ...mapGetters([
-      'name',
-      'staffPhoto'
+      'username',
+      'avatar'
     ])
+  },
+  methods: {
+    formartDay(date) {
+      return date.getDate()
+    },
+    checkShow(date) {
+      return date.getDay() === 0 || date.getDay() === 6
+    }
   }
+
 }
 </script>
 
@@ -146,12 +293,12 @@ export default {
     background-position: -460px 0;
   }
 }
+
 .select-box {
   display: flex;
   justify-content: flex-end;
 }
-// 深度选择器  由于scoped属性的关系  当前组件中的style样式只对当前组件生效
-// 如果需要定制三方组件 需要加上::v-deep 才能控制对应的类名样式
+
 ::v-deep .el-calendar-day {
   height:  auto;
  }
