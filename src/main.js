@@ -16,6 +16,9 @@ import '@/icons' // icon
 import glogin from '@/components'
 Vue.use(glogin)
 
+import directive from './directive'
+Vue.use(directive)
+
 import '@/permission'
 
 Vue.use(ElementUI)
