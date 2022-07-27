@@ -41,37 +41,13 @@
             <div class="title">公告</div>
             <div class="contentItem">
               <ul class="noticeList">
-                <li>
+                <li v-for="item in 3" :key="item">
                   <div class="item">
                     <img src="@/assets/common/img.jpeg" alt="">
                     <div>
                       <p>
                         <span class="col">朱继柳</span> 发布了
                         第1期“传智大讲堂”互动讨论获奖名单公布
-                      </p>
-                      <p>2018-07-21 15:21:38</p>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="item">
-                    <img src="@/assets/common/img.jpeg" alt="">
-                    <div>
-                      <p>
-                        <span class="col">朱继柳</span> 发布了
-                        第2期“传智大讲堂”互动讨论获奖名单公布
-                      </p>
-                      <p>2018-07-21 15:21:38</p>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="item">
-                    <img src="@/assets/common/img.jpeg" alt="">
-                    <div>
-                      <p>
-                        <span class="col">朱继柳</span> 发布了
-                        第3期“传智大讲堂”互动讨论获奖名单公布
                       </p>
                       <p>2018-07-21 15:21:38</p>
                     </div>
